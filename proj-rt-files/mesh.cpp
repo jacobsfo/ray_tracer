@@ -1,8 +1,9 @@
 #include "mesh.h"
 #include <fstream>
+#include<iostream>
 #include <string>
 #include <limits>
-
+using namespace std;
 // Consider a triangle to intersect a ray if the ray intersects the plane of the
 // triangle with barycentric weights in [-weight_tolerance, 1+weight_tolerance]
 static const double weight_tolerance = 1e-4;
@@ -42,16 +43,19 @@ void Mesh::Read_Obj(const char* file)
 // Check for an intersection against the ray.  See the base class for details.
 Hit Mesh::Intersection(const Ray& ray, int part) const
 {
+
     TODO;
     return {};
 }
 
 // Compute the normal direction for the triangle with index part.
 vec3 Mesh::Normal(const vec3& point, int part) const
-{
+{ 
+    //normal dir of plane 
+    //point[0],pt[1],pt[2]
     assert(part>=0);
-    TODO;
-    return vec3();
+    ivec3 ind = triangles[part];
+    return cross(point, vertices[ind[0]]);
 }
 
 // This is a helper routine whose purpose is to simplify the implementation
@@ -68,6 +72,29 @@ vec3 Mesh::Normal(const vec3& point, int part) const
 // two triangles.
 bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
 {
+   //Hit b;
+    
+    //ray-plane intersection-> get intersection pt p
+    //p = e + tu
+    //p = ray.endpoint + ray.direction*t
+    //dist(origin to plane) = x1/norm(normal)
+    
+    // t = -N(A,B,C)*ray.endpoint + dist(origin to plane)/N(A,B,C)*ray.direction
+    vec3 D = Normal(vertices[triangles[tri][1]],tri);
+    double d = dot(vertices[0],{0,0,0})/D.magnitude();
+   // double d = abs(D)/(abs(Normal(vertices[0],tri).magnitude()));
+   cout << "tri's" << triangles[tri][0] << endl;
+    //vec3 cp = cross(triangles[tri],triangles[1]);
+   double t = (dot(-D,ray.endpoint) + d)/dot(D,ray.direction);
+    //compute barycentric coordinates of p
+
+    /*intersection*/
+    //if dist>small_t and the barycentric weights are
+// larger than -weight_tolerance ,get dist + ret true
+
+     //else no intersection
+     //ret false
+
     TODO;
     return false;
 }
